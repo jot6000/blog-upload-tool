@@ -1,0 +1,29 @@
+.App-header {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  padding: 20px;
+}
+
+.App-subheader {
+  font-size: calc(2px + 2vmin);
+  padding: 10px;
+}
+
+.editor {
+  margin-left: 5vw;
+}
+
+textarea {
+  outline: none;
+  resize: none;
+  width: 40vw;
+  height: 60vh;
+}
+
+input {
+  outline: none;
+}
