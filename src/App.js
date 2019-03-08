@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import './App.css';
+import passphrase from './passphrase'
 
 class App extends Component {
   constructor(props) {
@@ -15,27 +16,52 @@ class App extends Component {
   }
 
   setUploadType = (event) => {
-    this.setState({uploadType:event.target.value})
+    this.setState({ uploadType: event.target.value })
   }
 
-  setTitle = (event) => {
-    this.setState({title:event.target.value})
+  onChangeTitle = (event) => {
+    this.setState({ title: event.target.value })
   }
 
-  setUrlpostfix = (event) => {
-    this.setState({urlpostfix:event.target.value})
+  onChangeUrlpostfix = (event) => {
+    var newValue = event.target.value;
+    if (newValue.includes(' ')) {
+      newValue = newValue.replace(' ', '')
+      //change this to something that looks nicer than an alert and is less intrusive
+      alert("URL Postfix cannot contain spaces");
+    }
+
+    this.setState({ urlpostfix: newValue })
   }
 
-  setDate = (event) => {
-    this.setState({date:event.target.value})
+  onChangeDate = (event) => {
+    this.setState({ date: event.target.value })
   }
 
-  setPreview = (event) => {
-    this.setState({preview:event.target.value})
+  onChangePreview = (event) => {
+    this.setState({ preview: event.target.value })
   }
 
-  setContent = (event) =>{
-    this.setState({content:event.target.value})
+  onChangeContent = (event) => {
+    this.setState({ content: event.target.value })
+  }
+
+  upload = () => {
+    console.log(this.state)
+    var request = new XMLHttpRequest();
+    var sendRequest;
+    var Response;
+
+    sendRequest = "title="+this.state.title+"&preview="+this.state.preview+"&urlpostfix="+this.state.urlpostfix+"&content="+this.state.content+"&date="+this.state.date+"&passphrase="+passphrase.passpharse;
+    console.log(sendRequest)
+  
+    request.open('POST', 'https://joe-mercer-blog-backend.herokuapp.com/addPost',true);
+    request.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+    request.onload = function(){
+        Response = this.response
+        console.log(this.response)
+    };
+    request.send(sendRequest);
   }
 
   render() {
@@ -44,27 +70,29 @@ class App extends Component {
         <header className="App-header">
           Joe Mercer Blog Upload Tool
           <div className="App-subheader" onChange={this.setUploadType.bind(this)}>
-            <input type="radio" value="post" name="gender"/> Post
-            <input type="radio" value="project" name="gender"/> Project
+            <input type="radio" value="post" name="gender" /> Post
+            <input type="radio" value="project" name="gender" /> Project
           </div>
         </header>
         <div className="editor">
           <div>Title</div>
-          <input></input>
+          <input type='text' value={this.state.title} onChange={this.onChangeTitle}></input>
           <div>URL Postfix</div>
-          <input></input>
-          { this.state.uploadType === 'post' &&
+          <input type='text' value={this.state.urlpostfix} onChange={this.onChangeUrlpostfix}></input>
+          {this.state.uploadType === 'post' &&
             <>
               <div>Date</div>
-              <input value={this.state.date}></input>
+              <input type='date' value={this.state.date} onChange={this.onChangeDate}></input>
             </>
           }
           <div>Preview</div>
-          <input></input>
+          <input type='text' value={this.state.preview} onChange={this.onChangePreview}></input>
           <div>Content</div>
-          <textarea/>
-          <br/>
-          <button>Upload</button>
+          <textarea value={this.state.content} onChange={this.onChangeContent}/>
+          <br />
+          <button onClick={this.upload}>Upload</button>
+          <button>Save to csv</button>
+          <button>Import from csv</button>
         </div>
       </div>
     );
