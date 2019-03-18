@@ -17,6 +17,18 @@
   margin-left: 5vw;
 }
 
+.preview-window {
+  margin-left: 10vw;
+  max-width: 40vw;
+  width: 40vw;
+}
+
+.preview-title {
+  font-size: 48px;
+  text-justify: center;
+  text-align: center;
+}
+
 textarea {
   outline: none;
   resize: none;
