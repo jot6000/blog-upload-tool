@@ -39,3 +39,20 @@ textarea {
 input {
   outline: none;
 }
+
+.modal {
+  background: white;
+  position: absolute;
+  float: left;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width:30vw;
+  height:20vh;
+  border-radius: 25px;
+  outline:0;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}

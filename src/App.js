@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import './App.css';
 import passphrase from './passphrase'
 import ReactMarkdown from 'react-markdown'
+import ReactModal from 'react-modal';
 
 class App extends Component {
   constructor(props) {
@@ -12,7 +13,8 @@ class App extends Component {
       date: new Date(),
       preview: '',
       content: '',
-      uploadType: ''
+      uploadType: '',
+      uploadOpen: false,
     };
   }
 
@@ -22,6 +24,20 @@ class App extends Component {
 
   onChangeTitle = (event) => {
     this.setState({ title: event.target.value })
+  }
+
+  openUpload = () => {
+    if(this.state.uploadType === 'Post'||this.state.uploadType === 'Project'){
+      this.setState({ uploadOpen: true })
+    }
+    else{
+      //change this to something that looks nicer than an alert and is less intrusive
+      alert("You need to specify if you are uploading a blog post or a project page.");
+    }
+  }
+
+  closeUpload = () => {
+    this.setState({ uploadOpen: false })
   }
 
   onChangeUrlpostfix = (event) => {
@@ -61,10 +77,6 @@ class App extends Component {
       sendRequest = "title="+this.state.title+"&preview="+this.state.preview+"&urlpostfix="+this.state.urlpostfix+"&content="+this.state.content+"&passphrase="+passphrase.passpharse;
       console.log(sendRequest)
     }
-    else{
-      //change this to something that looks nicer than an alert and is less intrusive
-      alert("You need to specify if you are uploading a blog post or a project page.");
-    }
 
     request.open('POST', 'https://joe-mercer-blog-backend.herokuapp.com/add'+this.state.uploadType,true);
     request.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
@@ -73,6 +85,8 @@ class App extends Component {
         console.log(this.response)
     };
     request.send(sendRequest);
+    this.closeUpload()
+    this.setState({title: '',urlpostfix: '',date: new Date(),preview: '',content: ''})
   }
 
   render() {
@@ -102,7 +116,7 @@ class App extends Component {
             <div>Content</div>
             <textarea value={this.state.content} onChange={this.onChangeContent}/>
             <br />
-            <button onClick={this.upload}>Upload</button>
+            <button onClick={this.openUpload}>Upload</button>
             <button>Save to csv</button>
             <button>Import from csv</button>
             <button>Edit a post/project</button>
@@ -112,9 +126,22 @@ class App extends Component {
             <ReactMarkdown>{this.state.content.replace(/\n/g, '  \n')}</ReactMarkdown>
           </div>
         </div>
+        <ReactModal
+          className = 'modal'
+          style={{ overlay: {background:'rgba(33,33,33,0.3)'}, content: {} }}
+          isOpen={this.state.uploadOpen}
+        >
+            <h1>Confirm Upload</h1>
+            <p1 style={{flexGrow:1}}>By confirming this your content will be uploaded.</p1>
+              <p1>Are you sure?</p1>
+            <div>
+              <button onClick={this.upload}>Confirm Upload</button>
+              <button onClick={this.closeUpload}>Cancel</button>
+            </div>
+        </ReactModal>
       </div>
     );
   }
 }
- 
+
 export default App;
