@@ -125,8 +125,9 @@ class App extends Component {
     console.log(this.state)
     var request = new XMLHttpRequest();
     var sendRequest;
-    //var Response;
+    var exists = false;
 
+    //Create request body for post or project ()
     if (this.state.uploadType === 'Post') {
       sendRequest = "title=" + this.state.title + "&preview=" + this.state.preview + "&urlpostfix=" + this.state.urlpostfix + "&content=" + this.state.content + "&date=" + this.state.date + "&passphrase=" + passphrase.passpharse;
       console.log(sendRequest)
@@ -136,13 +137,30 @@ class App extends Component {
       console.log(sendRequest)
     }
 
-    request.open('POST', 'https://joe-mercer-blog-backend.herokuapp.com/add' + this.state.uploadType, true);
-    request.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-    request.onload = function () {
-      //Response = this.response
-      console.log(this.response)
-    };
-    request.send(sendRequest);
+    //Logic to check if post/project exists already
+    this.state.posts.forEach(element => {
+      if(element.urlpostfix === this.state.urlpostfix){
+        exists = true;
+      }
+    });
+
+    if(exists === true){
+      request.open('PATCH', 'https://joe-mercer-blog-backend.herokuapp.com/edit' + this.state.uploadType, true);
+      request.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+      request.onload = function () {
+        console.log(this.response)
+      };
+      request.send(sendRequest+"&oldpostfix="+this.state.urlpostfix);
+    }else{
+      request.open('POST', 'https://joe-mercer-blog-backend.herokuapp.com/add' + this.state.uploadType, true);
+      request.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+      request.onload = function () {
+        console.log(this.response)
+      };
+      request.send(sendRequest);
+    }
+    
+    //Close modal and clean up input fields
     this.closeUpload()
     this.setState({ title: '', urlpostfix: '', date: new Date(), preview: '', content: '' })
   }
