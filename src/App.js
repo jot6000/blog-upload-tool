@@ -17,28 +17,37 @@ class App extends Component {
       uploadOpen: false,
       editOpen: false,
       posts: [],
+      projects: []
     };
   }
 
   componentDidMount() {
     var Response;
     var xhttp = new XMLHttpRequest();
+    var xhttp2 = new XMLHttpRequest();
     var self = this;
 
+    //Gets posts
     xhttp.open('GET', 'https://joe-mercer-blog-backend.herokuapp.com/postPreviews', true);
     xhttp.onload = function () {
       Response = JSON.parse(this.response)
-      self.setPosts(Response)
+      self.setState({ posts: Response })
     };
     xhttp.onerror = function () {
       console.log('Mission aborted')
     }
     xhttp.send(null)
-  }
 
-  setPosts(newArray) {
-    console.log(newArray)
-    this.setState({ posts: newArray })
+    //Gets projects
+    xhttp2.open('GET', 'https://joe-mercer-blog-backend.herokuapp.com/projectPreviews', true);
+    xhttp2.onload = function () {
+      Response = JSON.parse(this.response)
+      self.setState({ projects: Response })
+    };
+    xhttp2.onerror = function () {
+      console.log('Mission aborted')
+    }
+    xhttp2.send(null)
   }
 
   getFieldContent = (title, urlpostfix, date, preview) => {
