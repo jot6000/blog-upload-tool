@@ -55,9 +55,8 @@ class App extends Component {
     var Response;
     var xhttp = new XMLHttpRequest();
     var that = this;
-    
-    console.log('https://joe-mercer-blog-backend.herokuapp.com/postPage/' + urlpostfix)
-    xhttp.open('GET', 'https://joe-mercer-blog-backend.herokuapp.com/postPage/' + urlpostfix, true);
+    console.log('https://joe-mercer-blog-backend.herokuapp.com/'+this.state.uploadType.toLowerCase()+'Page/' + urlpostfix)
+    xhttp.open('GET', 'https://joe-mercer-blog-backend.herokuapp.com/'+this.state.uploadType.toLowerCase()+'Page/' + urlpostfix, true);
     xhttp.onload = function () {
       Response = JSON.parse(this.response)
       console.log(Response)
@@ -237,6 +236,14 @@ class App extends Component {
                   onClick={()=>this.getFieldContent(post.title, post.urlpostfix, post.date, post.preview)}
                 >
                   {post.title}
+                </button>
+              )}
+              {this.state.uploadType === 'Project' &&
+              this.state.projects.map((project) =>
+                <button
+                  onClick={()=>this.getFieldContent(project.title, project.urlpostfix, null, project.preview)}
+                >
+                  {project.title}
                 </button>
               )}
           </div>
